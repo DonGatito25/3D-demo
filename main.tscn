@@ -1,0 +1,119 @@
+[gd_scene load_steps=16 format=3 uid="uid://cwwjo7rvqwtqo"]
+
+[ext_resource type="Script" uid="uid://bi5ordjn2dsd" path="res://main.gd" id="1_main"]
+[ext_resource type="Texture2D" uid="uid://c1fj85up3mlpc" path="res://assets/checker.svg" id="2_checker"]
+
+[sub_resource type="Environment" id="Environment_room"]
+background_mode = 1
+background_color = Color(0.19, 0.22, 0.26, 1)
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.45
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_color = Color(0.52, 0.54, 0.56, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_floor"]
+material = SubResource("StandardMaterial3D_floor")
+size = Vector2(14, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_checker"]
+albedo_texture = ExtResource("2_checker")
+
+[sub_resource type="BoxMesh" id="BoxMesh_cube"]
+material = SubResource("StandardMaterial3D_checker")
+size = Vector3(1.25, 1.25, 1.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shapes"]
+albedo_color = Color(0.37, 0.58, 0.72, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ball"]
+material = SubResource("StandardMaterial3D_shapes")
+radius = 0.68
+height = 1.36
+radial_segments = 32
+rings = 16
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_column"]
+material = SubResource("StandardMaterial3D_shapes")
+top_radius = 0.61
+bottom_radius = 0.61
+height = 1.2
+radial_segments = 32
+rings = 0
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_pill"]
+material = SubResource("StandardMaterial3D_shapes")
+radius = 0.4
+height = 1.9
+radial_segments = 32
+rings = 12
+
+[sub_resource type="TorusMesh" id="TorusMesh_ring"]
+material = SubResource("StandardMaterial3D_shapes")
+inner_radius = 0.34
+outer_radius = 0.74
+rings = 32
+ring_segments = 16
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_blocks"]
+albedo_color = Color(0.27, 0.33, 0.4, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_blocks"]
+material = SubResource("StandardMaterial3D_blocks")
+size = Vector3(0.18, 0.06, 0.09)
+
+[sub_resource type="MultiMesh" id="MultiMesh_blocks"]
+transform_format = 1
+mesh = SubResource("BoxMesh_blocks")
+
+[node name="Demo" type="Node3D"]
+script = ExtResource("1_main")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_room")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.8525245, 0.42210034, -0.3082747, 0, 0.589788, 0.8075581, 0.52268726, -0.6884631, 0.50280875, 0, 0, 0)
+light_energy = 0.9
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.8577087, 0.514136, 0, -0.514136, 0.8577087, 0, 8.3, 13.8)
+projection = 1
+current = true
+size = 8.8
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_floor")
+
+[node name="Cube" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.8915683, 0, 0.45288628, 0, 1, 0, -0.45288628, 0, 0.8915683, -4.4, 0.625, -1.65)
+mesh = SubResource("BoxMesh_cube")
+
+[node name="Sphere" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 0.68, -2.15)
+mesh = SubResource("SphereMesh_ball")
+
+[node name="Cylinder" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.8, 0, 0, 0, 1.25, 0, 0, 0, 0.8, 0, 0.75, -1.55)
+mesh = SubResource("CylinderMesh_column")
+
+[node name="Capsule" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.9286646, 0.37092048, 0, -0.37092048, 0.9286646, 0, 0, 0, 1, 2.2, 0.91, -2.05)
+mesh = SubResource("CapsuleMesh_pill")
+
+[node name="Donut" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.97366637, -0.19426148, -0.119315684, 0, 0.523366, -0.852108, 0.22797753, 0.8296689, 0.50958383, 4.4, 0.66, -1.65)
+mesh = SubResource("TorusMesh_ring")
+
+[node name="InstancedBlocks" type="MultiMeshInstance3D" parent="."]
+cast_shadow = 0
+multimesh = SubResource("MultiMesh_blocks")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Stats" type="Label" parent="HUD"]
+offset_left = 16.0
+offset_top = 12.0
